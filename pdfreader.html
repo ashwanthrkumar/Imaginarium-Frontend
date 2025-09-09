@@ -1,91 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Book Reader | Imaginarium</title>
-<link rel="stylesheet" href="assets/css/pdfreader.css">
+  <link rel="stylesheet" href="assets/css/pdfreader.css">
 </head>
+
 <body>
-<header id="book-title">📖 Loading...</header>
-<div class="rate-wrap">
-<div class="rate-stars" id="rate-stars" aria-label="Rate this book">
-<span class="star" data-v="1">★</span>
-<span class="star" data-v="2">★</span>
-<span class="star" data-v="3">★</span>
-<span class="star" data-v="4">★</span>
-<span class="star" data-v="5">★</span>
-</div>
-<button id="rate-submit" class="rate-btn" disabled>Submit rating</button>
-<span class="rate-meta" id="rate-meta"></span>
-</div>
-<div id="pdf-viewer">
-<iframe id="pdf-frame"></iframe>
-</div>
+  <header id="book-title">📖 Loading...</header>
+  <div class="rate-wrap">
+    <div class="rate-stars" id="rate-stars" aria-label="Rate this book">
+      <span class="star" data-v="1">★</span>
+      <span class="star" data-v="2">★</span>
+      <span class="star" data-v="3">★</span>
+      <span class="star" data-v="4">★</span>
+      <span class="star" data-v="5">★</span>
+    </div>
+    <button id="rate-submit" class="rate-btn" disabled>Submit rating</button>
+    <span class="rate-meta" id="rate-meta"></span>
+  </div>
+  <div id="pdf-viewer">
+    <iframe id="pdf-frame"></iframe>
+  </div>
 
   <script>
-   const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
-const title = params.get("title");
-const genre = params.get("genre");
-const pdfUrl = params.get("pdfUrl");
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const title = params.get("title");
+    const genre = params.get("genre");
+    const pdfUrl = params.get("pdfUrl");
 
 
-document.getElementById("book-title").textContent = `${title} (${genre})`;
-document.getElementById("pdf-frame").src = pdfUrl;
+    document.getElementById("book-title").textContent = `${title} (${genre})`;
+    document.getElementById("pdf-frame").src = pdfUrl;
 
 
-const genreColors = {
-"Fantasy": "linear-gradient(to right, #2b5876, #4e4376)",
-"Romance": "linear-gradient(to right, #ff6a88, #ff99ac)",
-"Horror": "linear-gradient(to right, #000000, #434343)",
-"Mystery": "linear-gradient(to right, #28313b, #485563)",
-"Sci-Fi": "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
-"History": "linear-gradient(to right, #654321, #a0522d)",
-"Default": "linear-gradient(to right, #141e30, #243b55)"
-};
-document.body.style.background = genreColors[genre] || genreColors["Default"];
+    const genreColors = {
+      "Fantasy": "linear-gradient(to right, #2b5876, #4e4376)",
+      "Romance": "linear-gradient(to right, #ff6a88, #ff99ac)",
+      "Horror": "linear-gradient(to right, #000000, #434343)",
+      "Mystery": "linear-gradient(to right, #28313b, #485563)",
+      "Sci-Fi": "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
+      "History": "linear-gradient(to right, #654321, #a0522d)",
+      "Default": "linear-gradient(to right, #141e30, #243b55)"
+    };
+    document.body.style.background = genreColors[genre] || genreColors["Default"];
 
 
-// Rating logic
-const stars = Array.from(document.querySelectorAll('#rate-stars .star'));
-const submitBtn = document.getElementById('rate-submit');
-const meta = document.getElementById('rate-meta');
-let selected = 0;
+    // Rating logic
+    const stars = Array.from(document.querySelectorAll('#rate-stars .star'));
+    const submitBtn = document.getElementById('rate-submit');
+    const meta = document.getElementById('rate-meta');
+    let selected = 0;
 
 
-stars.forEach(s => {
-s.addEventListener('mouseenter', () => highlight(+s.dataset.v));
-s.addEventListener('mouseleave', () => highlight(selected));
-s.addEventListener('click', () => { selected = +s.dataset.v; submitBtn.disabled = selected === 0; highlight(selected); });
-});
+    stars.forEach(s => {
+      s.addEventListener('mouseenter', () => highlight(+s.dataset.v));
+      s.addEventListener('mouseleave', () => highlight(selected));
+      s.addEventListener('click', () => { selected = +s.dataset.v; submitBtn.disabled = selected === 0; highlight(selected); });
+    });
 
 
-function highlight(n) {
-stars.forEach(st => st.classList.toggle('active', +st.dataset.v <= n));
-}
+    function highlight(n) {
+      stars.forEach(st => st.classList.toggle('active', +st.dataset.v <= n));
+    }
 
 
-submitBtn.addEventListener('click', async () => {
-if (!id || !selected) return;
-submitBtn.disabled = true;
-meta.textContent = 'Submitting...';
-try {
-const res = await fetch(`http://localhost:8080/api/books/${encodeURIComponent(id)}/rate`, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ value: selected })
-});
-if (!res.ok) throw new Error('Failed');
-const updated = await res.json();
-meta.textContent = `Thanks! New avg: ${Number(updated.averageRating||0).toFixed(1)} (${updated.ratingCount||0})`;
-} catch (e) {
-console.error(e);
-meta.textContent = 'Could not submit rating. Try again.';
-} finally {
-submitBtn.disabled = false;
-}
-});
+    submitBtn.addEventListener('click', async () => {
+      if (!id || !selected) return;
+      submitBtn.disabled = true;
+      meta.textContent = 'Submitting...';
+      try {
+        const res = await fetch(`https://imaginarium-backend-721679390587.asia-east1.run.app/api/books/${encodeURIComponent(id)}/rate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ value: selected })
+        });
+        if (!res.ok) throw new Error('Failed');
+        const updated = await res.json();
+        meta.textContent = `Thanks! New avg: ${Number(updated.averageRating || 0).toFixed(1)} (${updated.ratingCount || 0})`;
+      } catch (e) {
+        console.error(e);
+        meta.textContent = 'Could not submit rating. Try again.';
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
   </script>
 </body>
+
 </html>

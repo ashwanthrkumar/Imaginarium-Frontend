@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Library | Imaginarium</title>
-   <link rel="stylesheet" href="assets/css/pdflibrary.css">
+    <link rel="stylesheet" href="assets/css/pdflibrary.css">
 </head>
+
 <body>
     <header>
         📚 Imaginarium Library
@@ -16,34 +18,34 @@
     </section>
 
     <script>
-     function renderStars(avg) {
-const rounded = Math.round(avg * 2) / 2; // support half stars if you prefer later
-let html = '';
-for (let i = 1; i <= 5; i++) {
-const filled = i <= Math.floor(rounded);
-const half = !filled && i - rounded === 0.5;
-html += `<span class="star ${filled ? 'filled' : ''}">${half ? '☆' : '★'}</span>`;
-}
-return html;
-}
+        function renderStars(avg) {
+            const rounded = Math.round(avg * 2) / 2; // support half stars if you prefer later
+            let html = '';
+            for (let i = 1; i <= 5; i++) {
+                const filled = i <= Math.floor(rounded);
+                const half = !filled && i - rounded === 0.5;
+                html += `<span class="star ${filled ? 'filled' : ''}">${half ? '☆' : '★'}</span>`;
+            }
+            return html;
+        }
 
 
-async function loadBooks() {
-try {
-const response = await fetch("http://localhost:8080/api/books");
-const books = await response.json();
-const library = document.getElementById("library");
-library.innerHTML = "";
+        async function loadBooks() {
+            try {
+                const response = await fetch("https://imaginarium-backend-721679390587.asia-east1.run.app/api/books");
+                const books = await response.json();
+                const library = document.getElementById("library");
+                library.innerHTML = "";
 
 
-books.forEach(book => {
-const avg = book.averageRating || 0;
-const count = book.ratingCount || 0;
+                books.forEach(book => {
+                    const avg = book.averageRating || 0;
+                    const count = book.ratingCount || 0;
 
 
-const card = document.createElement("div");
-card.className = "book-card";
-card.innerHTML = `
+                    const card = document.createElement("div");
+                    card.className = "book-card";
+                    card.innerHTML = `
 <img class="book-cover" src="${book.coverUrl}" alt="${book.title}">
 <div class="book-info">
 <h3>${book.title}</h3>
@@ -58,15 +60,16 @@ card.innerHTML = `
 </a>
 </div>
 `;
-library.appendChild(card);
-});
-} catch (error) {
-console.error("Error loading books:", error);
-}
-}
+                    library.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading books:", error);
+            }
+        }
 
 
-loadBooks();
+        loadBooks();
     </script>
 </body>
+
 </html>
