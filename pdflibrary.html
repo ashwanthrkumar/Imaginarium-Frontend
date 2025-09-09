@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Library | Imaginarium</title>
+   <link rel="stylesheet" href="assets/css/pdflibrary.css">
+</head>
+<body>
+    <header>
+        📚 Imaginarium Library
+    </header>
+
+    <section class="library-container" id="library">
+        <!-- Books will be loaded here -->
+    </section>
+
+    <script>
+     function renderStars(avg) {
+const rounded = Math.round(avg * 2) / 2; // support half stars if you prefer later
+let html = '';
+for (let i = 1; i <= 5; i++) {
+const filled = i <= Math.floor(rounded);
+const half = !filled && i - rounded === 0.5;
+html += `<span class="star ${filled ? 'filled' : ''}">${half ? '☆' : '★'}</span>`;
+}
+return html;
+}
+
+
+async function loadBooks() {
+try {
+const response = await fetch("http://localhost:8080/api/books");
+const books = await response.json();
+const library = document.getElementById("library");
+library.innerHTML = "";
+
+
+books.forEach(book => {
+const avg = book.averageRating || 0;
+const count = book.ratingCount || 0;
+
+
+const card = document.createElement("div");
+card.className = "book-card";
+card.innerHTML = `
+<img class="book-cover" src="${book.coverUrl}" alt="${book.title}">
+<div class="book-info">
+<h3>${book.title}</h3>
+<p>${book.genre}</p>
+<div class="rating-row">
+<span class="stars">${renderStars(avg)}</span>
+<span> ${avg.toFixed(1)}</span>
+<span class="rating-count">(${count})</span>
+</div>
+<a href="pdfreader.html?id=${encodeURIComponent(book.id)}&title=${encodeURIComponent(book.title)}&genre=${encodeURIComponent(book.genre)}&pdfUrl=${encodeURIComponent(book.pdfUrl)}&coverUrl=${encodeURIComponent(book.coverUrl)}">
+📖 Read PDF
+</a>
+</div>
+`;
+library.appendChild(card);
+});
+} catch (error) {
+console.error("Error loading books:", error);
+}
+}
+
+
+loadBooks();
+    </script>
+</body>
+</html>

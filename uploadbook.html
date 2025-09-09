@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Book | Imaginarium</title>
+  <link rel="stylesheet" href="assets/css/uploadbook.css">
+</head>
+<body>
+  <div class="upload-container">
+    <h2>📚 Upload a New Book</h2>
+    <form id="uploadForm">
+      <div class="form-group">
+        <label for="title">Book Title</label>
+        <input type="text" id="title" name="title" placeholder="Enter book title" required>
+      </div>
+      <div class="form-group">
+        <label for="genre">Genre</label>
+        <select id="genre" name="genre" required>
+          <option value="">Select Genre</option>
+          <option value="Fantasy">Fantasy</option>
+          <option value="Science Fiction">Science Fiction</option>
+          <option value="Romance">Romance</option>
+          <option value="Mystery">Mystery</option>
+          <option value="Non-fiction">Non-fiction</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="pdf">PDF File</label>
+        <input type="file" id="pdf" name="pdf" accept="application/pdf" required>
+      </div>
+      <div class="form-group">
+        <label for="cover">Cover Image</label>
+        <input type="file" id="cover" name="cover" accept="image/*" required>
+      </div>
+      <button type="submit" class="btn-submit">Upload Book</button>
+      <p class="message" id="message"></p>
+    </form>
+  </div>
+
+ <script>
+  const form = document.getElementById("uploadForm");
+  const message = document.getElementById("message");
+
+  async function uploadFile(endpoint, file,bookName) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("bookName", bookName);
+
+    const res = await fetch(`http://localhost:8080/api/upload/${endpoint}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) throw new Error("File upload failed");
+    return await res.text(); // The URL from backend
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    message.textContent = "⏳ Uploading...";
+
+    try {
+      const title = document.getElementById("title").value;
+      const genre = document.getElementById("genre").value;
+      const pdfFile = document.getElementById("pdf").files[0];
+      const coverFile = document.getElementById("cover").files[0];
+
+      // 1. Upload PDF
+      const pdfUrl = await uploadFile("pdf", pdfFile,title);
+
+      // 2. Upload Cover
+      const coverUrl = await uploadFile("cover", coverFile,title);
+
+      // 3. Save Book metadata
+      const book = { title, genre, pdfUrl, coverUrl };
+
+      const res = await fetch("http://localhost:8080/api/books", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(book),
+      });
+
+      if (res.ok) {
+        message.textContent = "✅ Book uploaded successfully!";
+        message.style.color = "lightgreen";
+        form.reset();
+      } else {
+        message.textContent = "❌ Failed to save book metadata.";
+        message.style.color = "red";
+      }
+    } catch (err) {
+      console.error(err);
+      message.textContent = "⚠️ Upload failed. Check console.";
+      message.style.color = "orange";
+    }
+  });
+</script>
+
+</body>
+</html>

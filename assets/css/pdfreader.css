@@ -1,0 +1,85 @@
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      transition: background 0.5s ease;
+    }
+
+    header {
+      padding: 15px;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+    }
+
+    #pdf-viewer {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.3);
+    }
+
+    iframe {
+      width: 90%;
+      height: 90%;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      background: #fff;
+    }
+/* extra styles for rating UI */
+.rate-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0 18px;
+}
+
+.rate-stars {
+  display: inline-flex;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* Base (unselected) star */
+.rate-stars .star {
+  font-size: 2rem;
+  line-height: 1;
+  color: #6b7280;              /* slate-500 */
+  opacity: 0.55;
+  transition: color .15s ease, opacity .15s ease, transform .15s ease;
+}
+
+/* Selected/active star */
+.rate-stars .star.active {
+  color: #ffd166;              /* gold */
+  opacity: 1;
+  transform: scale(1.05);
+  text-shadow: 0 0 8px rgba(255, 209, 102, .35);
+}
+
+/* Keyboard focus ring for accessibility */
+.rate-stars .star:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 209, 102, .35);
+  border-radius: 6px;
+}
+
+/* Button */
+.rate-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #ff4757;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.rate-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.rate-meta { font-size: 0.95rem; color:#ffd166; }

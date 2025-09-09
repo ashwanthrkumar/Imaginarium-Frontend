@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineLib | Home</title>
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">CineLib</div>
+        <div class="menu-toggle" id="menuToggle">☰</div>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="pdflibrary.html">PDF Library</a></li>
+            <li><a href="#">Audio Books</a></li>
+            <li><a href="#">Trailers</a></li>
+            <li><a href="#">Vision</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Mobile Nav -->
+    <div class="mobile-nav" id="mobileMenu">
+        <div class="close-btn" id="closeMenu">✕</div>
+        <a href="#">Home</a>
+        <a href="pdflibrary.html">PDF Library</a>
+        <a href="#">Audio Books</a>
+        <a href="#">Trailers</a>
+        <a href="#">Vision</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <!-- Hero Section -->
+  <section class="hero">
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline class="hero-video">
+    <source src="assets/video.mp4" type="video/mp4">
+    <source src="assets/video.mp4" type="video/mp4">
+    <!-- Optional fallback -->
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Hero Content -->
+  <div class="hero-content">
+    <h1>Stories, Reimagined.</h1>
+    <p>A cinematic platform where books, audio, and trailers meet.</p>
+    <a href="#" class="btn">Explore Library</a>
+  </div>
+</section>
+
+
+    <!-- Preview Cards -->
+    <section class="preview">
+        <div class="card">
+            <h3>📖 PDF Library</h3>
+            <p>Immerse in genre-based reading with dynamic backgrounds.</p>
+        </div>
+        <div class="card">
+            <h3>🎧 Audio Books</h3>
+            <p>Listen to stories with AI-generated cinematic visuals.</p>
+        </div>
+        <div class="card">
+            <h3>🎬 Trailers</h3>
+            <p>Watch story trailers in a cinematic showcase.</p>
+        </div>
+    </section>
+
+    <!-- About Teaser -->
+    <section class="about">
+        <p>Our vision is to create a cinematic storytelling experience where genres come alive through design, sound,
+            and visuals.</p>
+        <a href="#" class="btn">Read More →</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 CineLib. All rights reserved.</p>
+        <div>
+            <a href="#">About</a> |
+            <a href="#">Contact</a> |
+            <a href="#">Privacy</a>
+        </div>
+    </footer>
+
+    <!-- JS for Mobile Menu -->
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMenu = document.getElementById('closeMenu');
+
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+    </script>
+
+</body>
+
+</html>
